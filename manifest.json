@@ -1,0 +1,29 @@
+{
+
+    "name": "FB Reels Blocker",
+    "description": "Removes the annoying FB reels with a vengeance! ZAP, that sh*t is gone!",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+      },
+    "permissions": ["storage", "scripting","tabs", "https://facebook.com"],
+    "host_permissions": ["https://*.facebook.com/"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "/images/16xmovie-roll.png",
+            "32": "/images/32xmovie-roll.png",
+            "48": "/images/48xmovie-roll.png",
+            "128": "/images/128xmovie-roll.png"
+      }
+    
+    },
+
+    "icons": {
+        "16": "/images/16xmovie-roll.png",
+        "32": "/images/32xmovie-roll.png",
+        "48": "/images/48xmovie-roll.png",
+        "128": "/images/128xmovie-roll.png"
+      }
+}
