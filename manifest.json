@@ -7,7 +7,7 @@
     "background": {
         "service_worker": "background.js"
       },
-    "permissions": ["storage", "scripting","tabs", "https://facebook.com"],
+    "permissions": ["storage", "scripting","tabs"],
     "host_permissions": ["https://*.facebook.com/"],
     "action": {
         "default_popup": "popup.html",
