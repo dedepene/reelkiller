@@ -1,8 +1,8 @@
-let kills = 0;
+
 
 chrome.runtime.onInstalled.addListener(() => {
+  let kills = 0;
   chrome.storage.sync.set({ kills });
-  console.log('Number of kills:', `kills: ${kills}`);
 });
 
 async function getCurrentTab() {
