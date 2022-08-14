@@ -1,8 +1,8 @@
 {
 
     "name": "FB Reels Blocker",
-    "description": "Removes the annoying FB reels with a vengeance! ZAP, that sh*t is gone!",
-    "version": "1.0",
+    "description": "Removes the annoying FB reels and stories with a vengeance! ZAP, that sh*t is gone!",
+    "version": "1.1",
     "manifest_version": 3,
     "background": {
         "service_worker": "background.js"
