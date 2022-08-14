@@ -25,5 +25,7 @@
         "32": "/images/32xmovie-roll.png",
         "48": "/images/48xmovie-roll.png",
         "128": "/images/128xmovie-roll.png"
-      }
+      },
+    
+      "options_page": "options.html"
 }

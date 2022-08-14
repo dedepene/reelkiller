@@ -1,6 +1,7 @@
 
 
 chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.clear();
   let kills = 0;
   chrome.storage.sync.set({ kills });
 });
