@@ -9,32 +9,54 @@ function getParentNode(element, level =1) {
 }
 
 function removeReels() {
-    reels = document.getElementsByClassName('gvxzyvdx aeinzg81 t7p7dqev gh25dzvf exr7barw b6ax4al1 gem102v4 ncib64c9 mrvwc6qr sx8pxkcf f597kf1v cpcgwwas m2nijcs8 szxhu1pg hpj0pwwo sggt6rq5 innypi6y pbevjfx6');
-    for (let i=0; i <reels.length; i++){
-        if (reels[i].innerHTML.indexOf('Reels and short') != -1) {
-            properNode = getParentNode (reels[i], 6);
-            properNode.remove();
-            console.log('reels was found and terminated');
-            chrome.storage.sync.get("kills", ({ kills }) => {
-                kills++
-                chrome.storage.sync.set({ kills });
+    for (const a of document.querySelectorAll("span")) {
+        //find the span element containing a "Stories" string
+        if (a.textContent.includes("Reels and short")) {
+          //go 9 elements up the DOM three
+          const properNode = getParentNode (a, 7);
+          const targetNodeClassName = properNode.className;
+          const elementToKill = document.getElementsByClassName(targetNodeClassName);
+          
 
-              });
+          for (let i=0; i < elementToKill.length; i++){
+            if (elementToKill[i].innerText.indexOf('Reels and short') != -1) {
+                
+                elementToKill[i].remove();
+                console.log('Reels just got killed');
 
+                //add a kill to the tally
+                chrome.storage.sync.get("kills", ({ kills }) => {
+                    kills++
+                    chrome.storage.sync.set({ kills });
+    
+                   });
+    
+            }
+            else {
+                //console.log('got no reels');
+            }
+          
         }
-        else {
-            //console.log('got no reels');
-        }
-
-    }
-}
+      }
+    }}
 
 function removeStories(){
-    const stories = document.getElementsByClassName('alzwoclg jl2a5g8c jcxyg2ei p8bdhjjv q46jt4gp');
-    while (stories.length > 0) {
-        stories[0].parentNode.removeChild(stories[0]);
-        console.log('Stories just got killed');
-    }
+    for (const a of document.querySelectorAll("span")) {
+        //find the span element containing a "Stories" string
+        if (a.textContent.includes("Stories")) {
+          //go 9 elements up the DOM three
+          const properNode = getParentNode (a, 9);
+          const targetNodeClassName = properNode.className;
+          const elementToKill = document.getElementsByClassName(targetNodeClassName);
+          
+          //remove the top container element
+          while (elementToKill.length > 0) {
+            elementToKill[0].parentNode.removeChild(elementToKill[0]);
+            console.log('Stories just got killed');
+        }
+          
+        }
+      }
 }
 
 
@@ -54,13 +76,12 @@ function check_reels() {
 }  
 
 //check if the stories toggle is flipped in settings and call the stories clean up routine
-
 function check_stories() {
     
     chrome.storage.sync.get({ 
         chekedStories: true,
     }, (items) => {
-        console.log('stories:', items.chekedStories);
+        //console.log('stories:', items.chekedStories);
         if (items.chekedStories === true) {
             removeStories();
         };
@@ -72,3 +93,4 @@ function check_stories() {
 check_stories();
 //scrub reels and videos block at each scroll event
 document.addEventListener ('scroll', check_reels);
+//window.addEventListener ('DOMContentLoaded', check_stories);
