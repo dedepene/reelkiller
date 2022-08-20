@@ -59,7 +59,20 @@ function removeStories(){
       }
 }
 
-
+function productivityTimer(){
+    const html = `
+    <div class = "navbanner">
+        <p> TESTING 1...2...3 </p>
+    </div>
+    `;
+    const div=document.createElement('span');
+    div.innerHTML = html.trim(); 
+    document.body.insertBefore(div, document.body.firstChild); 
+    //div.innerText="test123";
+    // const banner = document.querySelectorAll('[role="banner"]');
+    // console.log('banner:', banner[0]);
+    // document.body.insertBefore(div, banner[0]);
+};
 
 //check if the reels toggle is flipped in settings and call the reels cleanup routine
 function check_reels() {
@@ -89,6 +102,22 @@ function check_stories() {
     
 }  
 
+function check_productivity() {
+    
+    chrome.storage.sync.get({ 
+        checkedProductivity: true,
+    }, (items) => {
+        console.log('productivity:', items.checkedProductivity);
+        if (items.chekedProductivity === true) {
+            //removeStories();
+        };
+    });
+    
+}  
+
+
+productivityTimer();
+//productivityTimer();
 //scrub stories
 check_stories();
 //scrub reels and videos block at each scroll event

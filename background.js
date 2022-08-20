@@ -1,4 +1,5 @@
-
+//const CSS = "body { .navbanner : 20px solid red; }";
+//chrome.tabs.insertCSS({code: CSS});
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.clear();
@@ -13,12 +14,17 @@ async function getCurrentTab() {
     return tab;
   }
 
-chrome.tabs.onUpdated.addListener((tabId, tab) => { 
+//check if facebook is loaded in the tab and then call the content script
+const filter = {
+    urls: ["https://www.facebook.com/"]
+  }  
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => { 
     const currentTab = getCurrentTab();
-    
+    console.log('changeInfo:', changeInfo, 'tabInfo:', tabInfo, 'changeinfo.url:', changeInfo.url);
     currentTab.then(result => {
-        console.log('then result:', result, "url: ", result.url);
-        if (result.url && result.url.includes ("facebook.com")) {
+        //console.log('then result:', result, "url: ", result.url);
+        if (changeInfo.status === 'complete' && result.url && result.url.includes ("facebook.com")) {
             console.log('We are on a FB page!');
             runFBScript(tabId);
         }
@@ -32,6 +38,12 @@ function runFBScript(tabid) {
     // Inject script from file into the webpage
     chrome.scripting.executeScript({
         files: ['facebook.js'],
+        target: {
+            tabId: tabid,
+          },
+    });
+    chrome.scripting.insertCSS({
+        files: ['styles.css'],
         target: {
             tabId: tabid,
           },
