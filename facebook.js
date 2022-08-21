@@ -60,18 +60,25 @@ function removeStories(){
 }
 
 function productivityTimer(){
+    let buttonDiv = document.body.firstChild;
     const html = `
-    <div class = "navbanner">
-        <p> TESTING 1...2...3 </p>
+    <div class = "footer rcorners">
+        <p> CLICK TO SNOOZE FACEBOOK </p>
     </div>
     `;
-    const div=document.createElement('span');
+    if (buttonDiv.id != 'pButton') {
+
+    let div=document.createElement('div');
     div.innerHTML = html.trim(); 
     document.body.insertBefore(div, document.body.firstChild); 
-    //div.innerText="test123";
-    // const banner = document.querySelectorAll('[role="banner"]');
-    // console.log('banner:', banner[0]);
-    // document.body.insertBefore(div, banner[0]);
+    buttonDiv = document.body.firstChild;
+    buttonDiv.setAttribute("id","pButton");
+    
+    const productivityButton = document.getElementsByClassName('footer');
+    productivityButton[0].addEventListener('click', snoozeFb);
+    }
+
+   
 };
 
 //check if the reels toggle is flipped in settings and call the reels cleanup routine
@@ -102,22 +109,47 @@ function check_stories() {
     
 }  
 
+//check if the productivity toggle is flipped in settings
 function check_productivity() {
-    
+
     chrome.storage.sync.get({ 
         checkedProductivity: true,
     }, (items) => {
         console.log('productivity:', items.checkedProductivity);
-        if (items.chekedProductivity === true) {
-            //removeStories();
-        };
+        if (items.checkedProductivity === true) {
+            productivityTimer();
+        } else {console.log('productivity off')};
     });
     
 }  
 
+function snoozeFb (){
+    console.log('facebook has been snoozed');
+    chrome.runtime.sendMessage({ cmd: 'GET_TIME' }, response => {
+        console.log('response:', response);
+        if (response.time) {
+          const time = new Date(response.time);
+          console.log('time from background:', time);
+        } else {console.log('no time came with response');}
+      });
+}
 
-productivityTimer();
-//productivityTimer();
+function startTimer(time) {
+    if (time.getTime() > Date.now()) {
+      setInterval(() => {
+        // display the remaining time
+      }, 1000)
+  
+    }
+  }
+  
+function startTime(time) {
+    chrome.runtime.sendMessage({ cmd: 'START_TIMER', when: time });
+    startTimer(time);
+  }
+
+check_productivity();
+
 //scrub stories
 check_stories();
 //scrub reels and videos block at each scroll event

@@ -1,3 +1,19 @@
+let timerID;
+let timerTime = Date.now();
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.cmd === 'START_TIMER') {
+    timerTime = new Date(request.when);
+    timerID = setTimeout(() => {
+       // the time is app, alert the user.
+    }, timerTime.getTime() - Date.now());
+  } else if (request.cmd === 'GET_TIME') {
+    sendResponse({ time: timerTime });
+  }
+});
+
+
+
 //const CSS = "body { .navbanner : 20px solid red; }";
 //chrome.tabs.insertCSS({code: CSS});
 
@@ -15,9 +31,7 @@ async function getCurrentTab() {
   }
 
 //check if facebook is loaded in the tab and then call the content script
-const filter = {
-    urls: ["https://www.facebook.com/"]
-  }  
+
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => { 
     const currentTab = getCurrentTab();

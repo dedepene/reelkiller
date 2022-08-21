@@ -3,3 +3,19 @@
     position:relative;
     z-index:1000
 }
+
+.footer {
+    position: fixed;
+    left: 20px;
+    bottom: 0;
+    width: 25%;
+    background-color: rgba(106, 187, 241, 0.829);
+    color: white;
+    text-align: center;
+    z-index:1000;
+  }
+
+  .rcorners {
+    border-radius: 25px;
+
+  }
