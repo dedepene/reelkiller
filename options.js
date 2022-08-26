@@ -1,3 +1,5 @@
+'use strict'
+
 //select the two checkbox elements
 const reelsCheckBox = document.getElementById ('reels');
 const storiesCheckBox = document.getElementById ('stories');

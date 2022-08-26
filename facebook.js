@@ -1,3 +1,5 @@
+'use strict'
+
 //this function instead of e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode
 
 function getParentNode(element, level =1) {
@@ -99,10 +101,10 @@ function check_reels() {
 function check_stories() {
     
     chrome.storage.sync.get({ 
-        chekedStories: true,
+        checkedStories: true,
     }, (items) => {
         //console.log('stories:', items.chekedStories);
-        if (items.chekedStories === true) {
+        if (items.checkedStories === true) {
             removeStories();
         };
     });
@@ -123,30 +125,54 @@ function check_productivity() {
     
 }  
 
+//let fbTab;
+
 function snoozeFb (){
+    let fbTab = '';
+    let fbTabId='';
     console.log('facebook has been snoozed');
-    chrome.runtime.sendMessage({ cmd: 'GET_TIME' }, response => {
+    chrome.runtime.sendMessage({ time: "1" }, function (response) {
         console.log('response:', response);
-        if (response.time) {
-          const time = new Date(response.time);
-          console.log('time from background:', time);
-        } else {console.log('no time came with response');}
-      });
+    });
+    // console.log('in between');
+    // fbTab = chrome.storage.sync.get ({fbTab});
+    // fbTabId = fbTab.then(result => {
+    //     fbTabId= result.fbTab;
+    //     console.log('result:', fbTabId);
+    //     return fbTabId;
+    //     // chrome.tabs.sendMessage(fbTabId, { greeting: "Hi from background script" });
+        
+    // });
+    
+    // console.log('outside now:', fbTabId);
+    // console.log('the tab is:', fbTab);
+    //chrome.tabs.sendMessage(fbTabId, { greeting: "Hi from background script" });
 }
 
-function startTimer(time) {
-    if (time.getTime() > Date.now()) {
-      setInterval(() => {
-        // display the remaining time
-      }, 1000)
-  
-    }
-  }
-  
-function startTime(time) {
-    chrome.runtime.sendMessage({ cmd: 'START_TIMER', when: time });
-    startTimer(time);
-  }
+    let timer = 1;
+    chrome.runtime.onMessage.addListener(
+        function (request, sender, sendResponse) {
+           
+            if (request.minute) {
+                timer = timer + Number(request.minute);
+                console.log('timer added:', timer);
+                if (timer) {
+                    sendResponse(timer);
+                }
+            };
+            
+        }
+    );
+
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//       console.log(sender.tab ?
+//                   "from a content script:" + sender.tab.url :
+//                   "from the extension");
+//       if (request.greeting === "hello")
+//         sendResponse({farewell: "goodbye"});
+//     }
+//   );
 
 check_productivity();
 
