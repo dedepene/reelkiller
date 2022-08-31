@@ -5,14 +5,14 @@ chrome.alarms.onAlarm.addListener(
         
         chrome.tabs.query({url: "https://www.facebook.com/*"}, function(tabs) {
             console.log('riiiing...riiing');
-            // console.log('tabs:', tabs, typeof(tabs));
-            // console.log('tab:', tabs[0].id, typeof(tabs[0].id));
+            
             chrome.tabs.sendMessage(tabs[0].id, {minute: "1"}, function(response) {
               console.log(response, typeof(response));
               if (response >= 3) {
                 terminateAlarms();
                 alarmsLength = undefined;
                 console.log(`killed all alarms after ${response} minutes`);
+                
               }
             });
           });
@@ -82,9 +82,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
         //console.log('then result:', result, "url: ", result.url);
         if (changeInfo.status === 'complete' && result.url && result.url.includes ("facebook.com")) {
             console.log('We are on a FB page!', 'tab id is', tabId);
-            chrome.storage.sync.set({ 
-                fbTab : tabId
-             });
+            console.log('alarms:', alarmsLength);
+            
+            // chrome.storage.sync.set({ 
+            //     fbTab : tabId
+            //  });
             runFBScript(tabId);
         }
         else console.log('This is not a FB page');
@@ -114,4 +116,11 @@ function runFBScript(tabid) {
 
 function terminateAlarms () {
     chrome.alarms.clearAll();
+    chrome.tabs.query({url: "https://www.facebook.com/*"}, function(tabs) {
+        //console.log(tabs);
+        chrome.tabs.sendMessage(tabs[0].id, {terminated: "yes", minute: "1"}, function(response) {
+        //console.log('response:', response);
+        });
+        console.log('done deal');
+});
 }

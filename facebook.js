@@ -61,7 +61,7 @@ function removeStories(){
       }
 }
 
-function productivityTimer(){
+function snoozeButton(){
     let buttonDiv = document.body.firstChild;
     const html = `
     <div class = "footer rcorners">
@@ -119,7 +119,7 @@ function check_productivity() {
     }, (items) => {
         console.log('productivity:', items.checkedProductivity);
         if (items.checkedProductivity === true) {
-            productivityTimer();
+            snoozeButton();
         } else {console.log('productivity off')};
     });
     
@@ -131,31 +131,28 @@ function snoozeFb (){
     let fbTab = '';
     let fbTabId='';
     console.log('facebook has been snoozed');
+    const mainBodyNode = document.getElementById('pButton').nextSibling;
+    document.getElementById(mainBodyNode.id).style.display = "none";
+    console.log('mainBodyNode:', mainBodyNode.id);
     chrome.runtime.sendMessage({ time: "1" }, function (response) {
         console.log('response:', response);
     });
-    // console.log('in between');
-    // fbTab = chrome.storage.sync.get ({fbTab});
-    // fbTabId = fbTab.then(result => {
-    //     fbTabId= result.fbTab;
-    //     console.log('result:', fbTabId);
-    //     return fbTabId;
-    //     // chrome.tabs.sendMessage(fbTabId, { greeting: "Hi from background script" });
-        
-    // });
-    
-    // console.log('outside now:', fbTabId);
-    // console.log('the tab is:', fbTab);
-    //chrome.tabs.sendMessage(fbTabId, { greeting: "Hi from background script" });
+   
 }
 
     let timer = 1;
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
-           
+            console.log('whole request coming from background:', request);
             if (request.minute) {
                 timer = timer + Number(request.minute);
                 console.log('timer added:', timer);
+                if (request.terminated === 'yes') {
+                    console.log('terminated whole request:', request);
+                    timer = 1;
+                    const mainBodyNode = document.getElementById('pButton').nextSibling;
+    document.getElementById(mainBodyNode.id).style.display = "block";
+                }
                 if (timer) {
                     sendResponse(timer);
                 }
@@ -163,16 +160,6 @@ function snoozeFb (){
             
         }
     );
-
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
-//       console.log(sender.tab ?
-//                   "from a content script:" + sender.tab.url :
-//                   "from the extension");
-//       if (request.greeting === "hello")
-//         sendResponse({farewell: "goodbye"});
-//     }
-//   );
 
 check_productivity();
 
